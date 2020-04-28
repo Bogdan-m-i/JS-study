@@ -20,3 +20,4 @@ adv.remove();
 
 let answer = prompt('Как вам техника Apple?','');
 promptDiv.textContent = answer;
+
