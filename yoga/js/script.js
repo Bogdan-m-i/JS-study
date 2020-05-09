@@ -34,13 +34,14 @@ window.addEventListener('DOMContentLoaded', function(){
 
         //timer
 
-        let deadLine = '2020-05-07 12:00:00';
+        let deadLine = '2020-06-01 12:00:00';
 
         function getTimeRemaining(endTime){
             let t = Date.parse(endTime) - Date.parse(new Date),
                 s = Math.floor((t/1000) % 60),
                 m = Math.floor((t/1000/60) % 60),
-                h = Math.floor((t/1000/60/60));
+                h = Math.floor((t/1000/60/60) % 24),
+                d = Math.floor((t/1000/60/60/24));
 
                 if (h < 10) h = '0' + h;
                 if (m < 10) m = '0' + m;
@@ -51,6 +52,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 's' : s,
                 'm' : m,
                 'h' : h,
+                'd' : d,
             }
         }
 
@@ -69,10 +71,33 @@ window.addEventListener('DOMContentLoaded', function(){
                     t.h = t.m = t.s = '00';
                 }
 
-                hours.textContent = t.h;
+                hours.textContent = t.d + ' д. ' + t.h;
                 minutes.textContent = t.m;
                 seconds.textContent = t.s;
             }
         }
         setClock('timer', deadLine);
+
+        
+        //modal
+
+        let more = document.querySelector('.more'),
+            overlay = document.querySelector('.overlay'),
+            close = document.querySelector('.popup-close');
+
+            document.body.addEventListener('click', function(e) {
+                if(e.target.classList.contains('more') || e.target.classList.contains('description-btn')) {
+                    overlay.style.display = 'block';
+                    e.target.classList.add('more-splash');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+
+            close.addEventListener('click', function(){
+                overlay.style.display = 'none';
+                more.classList.remove('more-splash');
+                document.body.style.overflow = '';
+                
+            });
 });
