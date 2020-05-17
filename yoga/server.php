@@ -1,3 +1,10 @@
-<?php 
+<pre>
+<?php print_r($_REQUEST); ?>
+</pre>
 
-echo $_SERVER[‘REMOTE_ADDR‘];
+
+<?php
+$postData = file_get_contents('php://input');
+$data = json_decode($postData, true);
+
+echo $data['phone'];
