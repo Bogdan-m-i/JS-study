@@ -123,34 +123,62 @@ window.addEventListener('DOMContentLoaded', function(){
 
                 form.appendChild(statusMessage);
 
-                let request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
-                //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                //request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-
                 let formData = new FormData(form);
-                // let obj = {};
-                // formData.forEach((v,k)=>{
-                //     obj[k] = v;
-                // });
+                        // let obj = {};
+                        // formData.forEach((v,k)=>{
+                        //     obj[k] = v;
+                        // });
 
-                // let json = JSON.stringify(obj);
+                        // let json = JSON.stringify(obj);
 
-                request.send(formData);
+                function postData(formData) {
+                    statusMessage.innerHTML = message.loading;
+                    return new Promise((resolve, reject) => {
 
-                request.addEventListener('readystatechange', () => {
-                    if(request.readyState < 4) {
-                        statusMessage.innerHTML = message.loading;
-                    } else if (request.readyState === 4 && request.status == 200) {
-                        statusMessage.innerHTML = message.success;
-                    } else {
-                        statusMessage.innerHTML = message.failure;
-                    }
-                });
+                        let request = new XMLHttpRequest();
+                        request.open('POST', 'server.php');
+                        //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        //request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-                for (let i = 1; i < input.length; i++) {
-                    input[i].value = '';
+                        request.onreadystatechange = () => {
+                            // if(request.readyState < 4) {
+                            //     resolve();
+                            // } else 
+                            if (request.readyState === 4 && request.status == 200) {
+                                resolve();
+                            } else {
+                                reject();
+                            }
+                            console.log(`${request.readyState} ${request.status}`);
+                        };
+
+                        request.send(formData);
+                    });
                 }
+
+                postData(formData)
+                .finally(() => {
+                    
+                })
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {resolve(statusMessage.innerHTML = message.success);}, 1000);
+                    });
+                })
+                .catch(() => {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {resolve(statusMessage.innerHTML = message.failure);}, 1000);
+                    });
+                })
+                .then(() => {
+                    console.log('xxxxx');
+                })
+                .then(() => {
+                    for (let i = 1; i < input.length; i++) {
+                        input[i].value = '';
+                    }
+                })
+
             });
 
 });
